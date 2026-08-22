@@ -1,0 +1,71 @@
+name: apartments
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: apartments-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: apartments
+    ports:
+      - '5434:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U postgres -d apartments' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    image: apartments-backend
+    container_name: apartments-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: apartments
+      MEDIA_BASE_URL: https://prod-images.cooingestate.com/processed/inventory
+    ports:
+      - '3001:3000'
+    command: sh -c "pnpm migration:run:prod && pnpm seed:prod && node dist/main"
+    healthcheck:
+      test: [ 'CMD-SHELL', 'wget -qO- http://localhost:3000/api/health || exit 1' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+      # NEXT_PUBLIC_* values are inlined into the client bundle at build time, so
+      # they must be passed as build args (runtime `environment:` is too late).
+      # The browser reaches the backend on its host-published port (3001).
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:3001/api
+        NEXT_PUBLIC_MEDIA_HOST: prod-images.cooingestate.com
+    image: apartments-frontend
+    container_name: apartments-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+    # Host 3000 -> container 3000.
+    ports:
+      - '3000:3000'
+
+volumes:
+  db_data:

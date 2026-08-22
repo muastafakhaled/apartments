@@ -1,0 +1,32 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# env (keep the examples)
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+
+# AI / agent tooling
+.claude/
+.cursor/
+.cursorrules
+.aider*
+CLAUDE.md
+AGENTS.md
+
+# editor / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
