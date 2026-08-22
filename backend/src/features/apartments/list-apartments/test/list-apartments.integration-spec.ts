@@ -45,43 +45,6 @@ describe('ListApartmentsHandler (integration)', () => {
     expect(data.items).toHaveLength(seeded.total - 12);
   });
 
-  it('filters by area name', async () => {
-    const seeded = await seedListing(fixture.dataSource);
-
-    const data = await handler.execute(
-      query({ area: seeded.areaBName, limit: 50 }),
-    );
-
-    expect(data.meta.total).toBe(seeded.partitionBCount);
-    expect(data.items.every((i) => i.area === seeded.areaBName)).toBe(true);
-  });
-
-  it('filters by compound name', async () => {
-    const seeded = await seedListing(fixture.dataSource);
-
-    const data = await handler.execute(
-      query({ compound: seeded.compoundBName, limit: 50 }),
-    );
-
-    expect(data.meta.total).toBe(seeded.partitionBCount);
-    expect(data.items.every((i) => i.compound === seeded.compoundBName)).toBe(
-      true,
-    );
-  });
-
-  it('filters by developer name', async () => {
-    const seeded = await seedListing(fixture.dataSource);
-
-    const data = await handler.execute(
-      query({ developer: seeded.developerBName, limit: 50 }),
-    );
-
-    expect(data.meta.total).toBe(seeded.partitionBCount);
-    expect(data.items.every((i) => i.developer === seeded.developerBName)).toBe(
-      true,
-    );
-  });
-
   it('filters by sale type', async () => {
     const seeded = await seedListing(fixture.dataSource);
 
@@ -167,7 +130,10 @@ describe('ListApartmentsHandler (integration)', () => {
     const seeded = await seedListing(fixture.dataSource);
 
     const data = await handler.execute(
-      query({ area: seeded.areaAName, developer: seeded.developerBName }),
+      query({
+        saleType: SaleType.DeveloperSale,
+        minBedrooms: seeded.bedroomsMax + 1,
+      }),
     );
 
     expect(data.meta.total).toBe(0);

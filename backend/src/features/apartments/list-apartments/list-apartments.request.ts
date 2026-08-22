@@ -1,33 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 import { ApartmentStatus, Finishing, SaleType } from '../../../domain';
 
 export class ListApartmentsRequest {
-  @ApiPropertyOptional({
-    description: 'Filter by area name',
-    example: 'New Cairo',
-  })
-  @IsOptional()
-  @IsString()
-  area?: string;
-
-  @ApiPropertyOptional({
-    description: 'Filter by compound (project) name',
-    example: 'Mivida',
-  })
-  @IsOptional()
-  @IsString()
-  compound?: string;
-
-  @ApiPropertyOptional({
-    description: 'Filter by developer name',
-    example: 'Palm Hills Developments',
-  })
-  @IsOptional()
-  @IsString()
-  developer?: string;
-
   @ApiPropertyOptional({ enum: SaleType, description: 'Filter by sale type' })
   @IsOptional()
   @IsEnum(SaleType)

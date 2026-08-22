@@ -16,10 +16,6 @@ import {
 } from '../../../../test/factories';
 
 export interface SeededListing {
-  areaAName: string;
-  areaBName: string;
-  compoundBName: string;
-  developerBName: string;
   partitionBCount: number;
   developerSaleCount: number;
   minTwoBedroomsCount: number;
@@ -104,10 +100,6 @@ export async function seedListing(ds: DataSource): Promise<SeededListing> {
   const priceThreshold = 2_000_000;
 
   return {
-    areaAName,
-    areaBName,
-    compoundBName,
-    developerBName,
     partitionBCount: partitionB.length,
     developerSaleCount: all.filter((a) => a.saleType === SaleType.DeveloperSale)
       .length,

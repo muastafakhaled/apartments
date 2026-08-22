@@ -27,9 +27,6 @@ export interface ListApartmentsResponse {
 export interface ListApartmentsParams {
   page?: number;
   limit?: number;
-  area?: string;
-  compound?: string;
-  developer?: string;
   saleType?: string;
   finishing?: string;
   status?: string;

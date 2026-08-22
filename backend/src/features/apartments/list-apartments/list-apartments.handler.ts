@@ -8,7 +8,7 @@ import {
   MoreThanOrEqual,
   Repository,
 } from 'typeorm';
-import { Apartment, Compound } from '../../../domain';
+import { Apartment } from '../../../domain';
 import { PaginationMeta } from '../../../shared/dto/paginated.response';
 import { ApartmentListMapper } from './list-apartments.mapper';
 import { ListApartmentsRequest } from './list-apartments.request';
@@ -59,12 +59,6 @@ export class ListApartmentsHandler {
 
     const area = rangeOperator(query.minArea, query.maxArea);
     if (area) where.areaSqm = area;
-
-    const compound: FindOptionsWhere<Compound> = {};
-    if (query.compound) compound.name = query.compound;
-    if (query.area) compound.area = { name: query.area };
-    if (query.developer) compound.developer = { name: query.developer };
-    if (Object.keys(compound).length > 0) where.compound = compound;
 
     return where;
   }
