@@ -1,0 +1,5 @@
+nodeLinker: hoisted
+
+allowBuilds:
+  sharp: false
+  unrs-resolver: true
